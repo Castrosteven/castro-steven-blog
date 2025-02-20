@@ -1,0 +1,158 @@
+---
+title: "Deploying Applications with Docker on AWS Using GitHub Actions"
+description: "Learn how to deploy applications to AWS using Docker, GitHub Actions, and feature flagging across dev, stage, and prod environments."
+publishedAt: 2025-02-18T20:09:05.488Z
+image: /deployment/pipeline.jpeg
+summary: "Welcome to my blog"
+tags:
+  - AWS
+  - Docker
+  - GitHub Actions
+  - CI/CD
+category: DevOps
+readingTime: "6 min"
+---
+
+# Deploying Applications with Docker on AWS Using GitHub Actions 
+
+Modern applications require automated deployment pipelines to streamline DevOps workflows. In this guide, we will deploy a Dockerized application to AWS using GitHub Actions, implementing CI/CD for **development**, **staging**, and **production** environments. Additionally, we will integrate **feature flags** for controlled releases.
+
+## Prerequisites
+
+Before we begin, ensure you have the following:
+
+- An AWS account
+- Docker installed locally
+- A GitHub repository
+- AWS CLI configured with IAM credentials
+- A container registry (Amazon Elastic Container Registry - ECR)
+- A running ECS cluster (Elastic Container Service) or EC2 instance
+
+## Step 1: Dockerizing the Application
+
+Create a `Dockerfile` in your project root:
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . .
+CMD ["npm", "start"]
+EXPOSE 3000
+```
+
+### Build and Test Locally
+
+```sh
+docker build -t my-app .
+docker run -p 3000:3000 my-app
+```
+
+## Step 2: Setting Up AWS ECR
+
+Create an ECR repository:
+
+```sh
+aws ecr create-repository --repository-name my-app --region us-east-1
+```
+
+Authenticate Docker with ECR:
+
+```sh
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com
+```
+
+## Step 3: GitHub Actions CI/CD Pipeline
+
+Create a `.github/workflows/deploy.yml` file:
+
+```yaml
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Authenticate with AWS
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com
+
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE_URI=<AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/my-app:${{ github.sha }}
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
+
+      - name: Deploy to ECS
+        run: |
+          aws ecs update-service --cluster my-cluster --service my-service --force-new-deployment
+```
+
+## Step 4: Feature Flags Implementation
+
+For feature flagging, we can use **LaunchDarkly**, **Unleash**, or **custom environment variables**. Example using LaunchDarkly:
+
+```js
+import { initialize } from 'launchdarkly-node-client-sdk';
+
+const ldClient = initialize('LAUNCHDARKLY_SDK_KEY', { key: 'user-key' });
+
+ldClient.waitForInitialization().then(() => {
+  const isFeatureEnabled = ldClient.variation('new-feature', false);
+  console.log('Feature Enabled:', isFeatureEnabled);
+});
+```
+
+Set environment variables in GitHub Actions:
+
+```yaml
+      - name: Set Environment Variables
+        run: echo "LAUNCHDARKLY_SDK_KEY=${{ secrets.LAUNCHDARKLY_SDK_KEY }}" >> $GITHUB_ENV
+```
+
+## Step 5: Configuring Multi-Environment Pipelines
+
+Modify `.github/workflows/deploy.yml` to handle different branches:
+
+```yaml
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/staging' && 'staging' || 'development' }}
+```
+
+Store environment-specific configurations in GitHub **Environments**:
+
+- **Development**: `develop`
+- **Staging**: `staging`
+- **Production**: `main`
+
+# Conclusion
+
+By following this guide, we have:
+
+- Dockerized our application
+- Pushed images to AWS ECR
+- Set up GitHub Actions for automated deployment
+- Used feature flags for controlled releases
+- Configured multi-environment pipelines
+
+This setup ensures scalable, efficient, and controlled deployments with **feature flagging** for seamless updates.
