@@ -43,7 +43,7 @@ const fetchPostsMetadataWithTableOfContents = async ({
     const filePath = path.join(postDir, slug, "content.mdx");
     let rawContent = fs.readFileSync(filePath, "utf-8");
     const { metadata, tableOfContents } = parseFrontmatter(rawContent);
-    const { title, publishedAt, summary, image, category, readingTime } =
+    const { title, publishedAt, summary, image, category, readingTime, tags } =
       metadata;
 
     if (
@@ -52,7 +52,8 @@ const fetchPostsMetadataWithTableOfContents = async ({
       !summary ||
       !image ||
       !category ||
-      !readingTime
+      !readingTime ||
+      !tags
     ) {
       throw new Error(`Missing required metadata fields in post: ${slug}`);
     }
@@ -66,6 +67,7 @@ const fetchPostsMetadataWithTableOfContents = async ({
       tableOfContents,
       category,
       readingTime,
+      tags,
     };
   });
 

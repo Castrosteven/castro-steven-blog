@@ -9,6 +9,7 @@ import React from "react";
 import { slugify } from "@/utils/posts";
 import rehypeHighlight from "rehype-highlight";
 import "@/styles/github-dark.css";
+import { Footer } from "../footer";
 
 function createHeading(level: string) {
   const Heading = ({ children }: { children: string }) => {
@@ -48,7 +49,7 @@ export default function BlogPost({
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="fixed top-0 w-full bg-background/80 backdrop-blur-sm z-50 border-b">
+      <header className="fixed top-0 w-full bg-background/80 backdrop-blur-sm z-50 border-b  pr-4 pl-4 md:pl-0 md:pr-0">
         <div className="container mx-auto flex h-16 items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/" className="font-semibold">
@@ -58,7 +59,7 @@ export default function BlogPost({
         </div>
       </header>
 
-      <main className="flex-1 pt-16">
+      <main className="flex-1 pt-16 ">
         {/* Hero Section */}
         <div className="relative h-[400px] overflow-hidden">
           <Image
@@ -67,9 +68,9 @@ export default function BlogPost({
             fill
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-600 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-orange-600 mix-blend-overlay " />
           <div className="absolute inset-0 bg-black/40" />
-          <div className="container mx-auto relative h-full flex items-end pb-12">
+          <div className="container mx-auto relative h-full flex items-end pb-12  pr-4 pl-4 md:pl-0 md:pr-0">
             <div className="max-w-3xl space-y-4">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
                 {title}
@@ -81,7 +82,7 @@ export default function BlogPost({
         </div>
 
         {/* Content Section */}
-        <div className="container mx-auto py-12">
+        <div className="container mx-auto py-12  pr-4 pl-4 md:pl-0 md:pr-0">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Main Content */}
             <div className="lg:col-span-2 prose prose-gray max-w-none">
@@ -102,7 +103,6 @@ export default function BlogPost({
                 }}
               />
             </div>
-
             <Sidebar tableOfContents={tableOfContents} />
           </div>
         </div>
@@ -113,59 +113,19 @@ export default function BlogPost({
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div>
                 <h2 className="text-xl font-semibold mb-2">
-                  Ready to level up your business?
+                  Ready to work together?
                 </h2>
                 <p className="text-muted-foreground">
-                  Start your 30-day free trial. Cancel anytime.
+                  Let's hop on a zoom call and discuss your project at no cost.
                 </p>
               </div>
-              <Button size="lg">Get started</Button>
+              <Button size="lg">Contact Me</Button>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t bg-gray-900 text-gray-400">
-        <div className="container py-12 mx-auto">
-          <div className="grid gap-8 md:grid-cols-2">
-            <div>
-              <Link href="/" className="text-white font-semibold mb-4 block">
-                Castro Steven
-              </Link>
-              <p className="text-sm">
-                Software Engineering, AI, finance, and more. Learn to build
-              </p>
-            </div>
-          </div>
-          <div className="mt-12 pt-8 border-t border-gray-800">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="text-sm">
-                © 2025 Castro Steven. All rights reserved.
-              </div>
-              <div className="flex gap-4">
-                <Link href="/" className="hover:text-white">
-                  Overview
-                </Link>
-                <Link href="/" className="hover:text-white">
-                  Features
-                </Link>
-                <Link href="/" className="hover:text-white">
-                  Pricing
-                </Link>
-                <Link href="/" className="hover:text-white">
-                  Careers
-                </Link>
-                <Link href="/" className="hover:text-white">
-                  Help
-                </Link>
-                <Link href="/" className="hover:text-white">
-                  Privacy
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
