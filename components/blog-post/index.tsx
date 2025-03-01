@@ -116,7 +116,7 @@ export default function BlogPost({
                   Ready to work together?
                 </h2>
                 <p className="text-muted-foreground">
-                  Let's hop on a zoom call and discuss your project at no cost.
+                  Lets hop on a zoom call and discuss your project at no cost.
                 </p>
               </div>
               <Button size="lg">Contact Me</Button>

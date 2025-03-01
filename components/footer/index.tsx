@@ -1,13 +1,4 @@
 import Link from "next/link";
-import {
-  Github,
-  Twitter,
-  Linkedin,
-  Facebook,
-  Dribbble,
-  Rss,
-} from "lucide-react";
-
 export function Footer() {
   return (
     <footer className="border-t bg-gray-900 text-gray-400 pl-4 pr-4">

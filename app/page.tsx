@@ -10,10 +10,7 @@ const Card = ({
   publishedAt,
   slug,
   summary,
-  tableOfContents,
   title,
-  category,
-  readingTime,
   tags,
 }: {
   slug: string;
