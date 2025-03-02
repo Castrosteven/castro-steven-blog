@@ -4,6 +4,7 @@ import "@/styles/devicon.min.css";
 import Image from "next/image";
 import VideoHero from "@/components/video-hero";
 import { Footer } from "@/components/footer";
+import BlogPosts from "@/components/posts";
 
 const Card = ({
   image,
@@ -77,7 +78,7 @@ export default async function Home() {
 
   return (
     <div className="">
-      <section>
+      <section className="">
         <header className="fixed top-0 w-full bg-background/80 backdrop-blur-sm z-50 border-b pr-4 pl-4 md:pl-0 md:pr-0">
           <div className="container mx-auto flex h-16 items-center justify-between">
             <div className="flex items-center gap-6">
@@ -89,15 +90,18 @@ export default async function Home() {
         </header>
       </section>
       <VideoHero />
-      <section className="mt-12">
-        <div className="container mx-auto md:pl-24 md:pr-24 pl-4 pr-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <section className="mt-12 ">
+        <div className="container mx-auto ">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
             {posts.map((post) => {
               return <Card key={post.slug} {...post} />;
             })}
           </div>
         </div>
       </section>
+      {/* <section>
+        <BlogPosts />
+      </section> */}
       <Footer />
     </div>
   );

@@ -85,8 +85,10 @@ const fetchPostMetadataWithContentBySlug = (
   content: string;
   tableOfContents: { level: number; text: string }[];
 } => {
-  const path = `${postDir}/${slug}`;
-  let rawContent = fs.readFileSync(`${path}/content.mdx`, "utf-8");
+  // const path = `${postDir}/${slug}`;
+  const filePath = path.join(postDir, slug, "content.mdx");
+  const rawContent = fs.readFileSync(filePath, "utf-8");
+  // let rawContent = fs.readFileSync(`${path}/content.mdx`, "utf-8");
   return parseFrontmatter(rawContent);
 };
 
